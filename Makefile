@@ -1,7 +1,7 @@
 # the compiler: gcc for C program, g++ for C++ program
 CXX = g++
 
-GIT_VERSION := "$(shell git describe --abbrev=0 --tags)"
+# GIT_VERSION := "$(shell git describe --abbrev=0 --tags)"
 
 # compiler flags:
 #  -g      adds debugging information to the executable file
