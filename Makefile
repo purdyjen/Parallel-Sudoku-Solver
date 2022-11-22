@@ -29,8 +29,7 @@ DEPENDENCIES = \
 	./src/SudokuSolver_ParallelDLX.cpp \
 	./src/SudokuSolver_SequentialForwardChecking.cpp
 
-all:
-<\t>$(TARGETS)
+all: $(TARGETS)
 
 sudoku_main: sudoku_main.cpp $(DEPENDENCIES)
 	$(CXX) $(CXX_FLAGS) $(OPENMP) -I ./inc -o $@ $^
