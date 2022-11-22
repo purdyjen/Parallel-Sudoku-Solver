@@ -1,16 +1,38 @@
-all: main
+# the compiler: gcc for C program, g++ for C++ program
+CXX = g++
 
-CXX = clang++
-override CXXFLAGS += -g -Wno-everything
+GIT_VERSION := "$(shell git describe --abbrev=0 --tags)"
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
+# compiler flags:
+#  -g      adds debugging information to the executable file
+#  -Wall   turns on most, but not all, compiler warnings
+#  -Wextra enables some extra warning flags that are not enabled by -Wall
+CXX_FLAGS = --std=c++17 -g -Wall -Wextra -O3 -DVERSION=\"$(GIT_VERSION)\"
+OPENMP = -fopenmp
 
-main: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o "$@"
+# All output target executables
+TARGETS = sudoku_main
 
-main-debug: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) -O0 $(SRCS) -o "$@"
+# All object files
+OBJECTS = *.o *.out
+
+DEPENDENCIES = \
+	./src/SudokuBoard.cpp \
+	./src/SudokuBoardDeque.cpp \
+	./src/SudokuTest.cpp \
+	./src/SudokuSolver.cpp \
+	./src/SudokuSolver_SequentialBacktracking.cpp \
+	./src/SudokuSolver_SequentialBruteForce.cpp \
+	./src/SudokuSolver_ParallelBruteForce.cpp \
+	./src/Node.cpp \
+	./src/SudokuSolver_SequentialDLX.cpp \
+	./src/SudokuSolver_ParallelDLX.cpp \
+	./src/SudokuSolver_SequentialForwardChecking.cpp
+
+all: $(TARGETS)
+
+sudoku_main: sudoku_main.cpp $(DEPENDENCIES)
+	$(CXX) $(CXX_FLAGS) $(OPENMP) -I ./inc -o $@ $^
 
 clean:
-	rm -f main main-debug
+	rm -f $(TARGETS) $(OBJECTS) solution.txt
